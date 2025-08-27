@@ -1,6 +1,6 @@
 # Changes here will be overwritten by Copier
 _commit: v0.1.9
-_src_path: gh:edgarrmondragon/singer-tap-copier-template
+_src_path: gh:reservoir-data/singer-tap-copier-template
 author_email: edgarrmondragon@hey.com
 author_fullname: Edgar Ramírez-Mondragón
 author_username: edgarrmondragon

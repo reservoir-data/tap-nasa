@@ -120,3 +120,37 @@ Go ahead and [install Meltano](https://docs.meltano.com/getting-started/installa
 
 See the [dev guide](https://sdk.meltano.com/en/latest/dev_guide.html) for more instructions on how to use the SDK to
 develop your own taps and targets.
+
+### Tox usage
+
+You can use [tox](https://tox.readthedocs.io/) to run tests, type checks, and dependency checks in isolated environments. This is especially useful for ensuring consistency across different Python versions and setups.
+
+List all available environments:
+
+```bash
+tox -av
+```
+
+Run tests for a specific Python version (e.g., 3.10):
+
+```bash
+tox -e 3.10
+```
+
+Check typing with mypy:
+
+```bash
+tox -e typing
+```
+
+Check dependencies with deptry:
+
+```bash
+tox -e dependencies
+```
+
+You can also run all environments in parallel:
+
+```bash
+tox run-parallel
+```

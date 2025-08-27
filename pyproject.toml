@@ -36,9 +36,9 @@ dynamic = [
 dependencies = [
   "singer-sdk~=0.48.0",
 ]
-urls.Documentation = "https://github.com/edgarrmondragon/tap-nasa#readme"
-urls.Homepage = "https://github.com/edgarrmondragon/tap-nasa"
-urls.Repository = "https://github.com/edgarrmondragon/tap-nasa"
+urls.Documentation = "https://github.com/reservoir-data/tap-nasa#readme"
+urls.Homepage = "https://github.com/reservoir-data/tap-nasa"
+urls.Repository = "https://github.com/reservoir-data/tap-nasa"
 scripts."tap-nasa" = "tap_nasa.tap:TapNASA.cli"
 
 [dependency-groups]
@@ -109,16 +109,19 @@ env_list = [
 ]
 
 [tool.tox.env_run_base]
+description = "integration tests"
 runner = "uv-venv-lock-runner"
 pass_env = [ "TAP_NASA_*" ]
 dependency_groups = [ "testing" ]
 commands = [ [ "pytest", { replace = "posargs", default = [ "tests" ], extend = true } ] ]
 
 [tool.tox.env.dependencies]
+description = "check imports for transitive dependencies"
 dependency_groups = [ "testing" ]
 commands = [ [ "deptry", "." ] ]
 
 [tool.tox.env.typing]
+description = "static type checks"
 dependency_groups = [ "testing", "typing" ]
 commands = [ [ "mypy", "--strict", { replace = "posargs", default = [ "tap_nasa", "tests" ], extend = true } ] ]
 
