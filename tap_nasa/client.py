@@ -3,15 +3,22 @@
 from __future__ import annotations
 
 import dataclasses
+import sys
 import typing as t
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta
 
 from singer_sdk import RESTStream
 from singer_sdk import typing as th
 from singer_sdk.authenticators import APIKeyAuthenticator
 from singer_sdk.pagination import BaseAPIPaginator
 
+if sys.version_info >= (3, 12):
+    from typing import override
+else:
+    from typing_extensions import override
+
 if t.TYPE_CHECKING:
+    from requests import Response
     from singer_sdk.helpers import types
 
 DATE_FORMAT = "%Y-%m-%d"
@@ -54,25 +61,9 @@ class DateRange:
 class DateRangePaginator(BaseAPIPaginator[DateRange]):
     """Date range paginator."""
 
-    def __init__(self, start_value: DateRange) -> None:
-        """Initialize the paginator.
-
-        Args:
-            start_value: The start value.
-        """
-        super().__init__(start_value)
-
-    def get_next(self, response) -> DateRange | None:  # type: ignore[no-untyped-def]  # noqa: ANN001, ARG002
-        """Get the next value.
-
-        Args:
-            response: The response.
-
-        Returns:
-            The next value.
-        """
+    @override
+    def get_next(self, response: Response) -> DateRange | None:
         new = self.current_value.increase()
-
         return new if new.is_valid() else None
 
 
@@ -132,28 +123,20 @@ class NASAStream(RESTStream[DateRange]):
     ).to_dict()
 
     @property
+    @override
     def authenticator(self) -> APIKeyAuthenticator:
         """Get an authenticator object.
 
         Returns:
             The authenticator instance for this REST stream.
         """
-        return APIKeyAuthenticator.create_for_stream(
-            self,
+        return APIKeyAuthenticator(
             key="api_key",
             value=self.config["api_key"],
             location="params",
         )
 
-    @property
-    def http_headers(self) -> dict[str, str]:
-        """Return the http headers needed.
-
-        Returns:
-            A dictionary of HTTP headers.
-        """
-        return {"User-Agent": f"{self.tap_name}/{self._tap.plugin_version}"}
-
+    @override
     def get_new_paginator(self) -> DateRangePaginator:
         """Get a new paginator."""
         start_dt = self.get_starting_timestamp(context=self.context)
@@ -168,24 +151,16 @@ class NASAStream(RESTStream[DateRange]):
             start_value=DateRange(
                 start=start_date,
                 interval=timedelta(days=100),
-                max_date=datetime.now(timezone.utc).date(),
+                max_date=datetime.now(UTC).date(),
             )
         )
 
+    @override
     def get_url_params(
         self,
         context: types.Context | None,
         next_page_token: DateRange | None,
     ) -> dict[str, t.Any] | str:
-        """Get URL query parameters.
-
-        Args:
-            context: Stream sync context.
-            next_page_token: Next offset.
-
-        Returns:
-            Mapping of URL query parameters.
-        """
         if next_page_token:
             return {
                 "start_date": next_page_token.start.strftime(DATE_FORMAT),
