@@ -16,7 +16,6 @@ Built with the [Meltano Tap SDK](https://sdk.meltano.com) for Singer Taps.
 
 ## Supported Python Versions
 
-* 3.10
 * 3.11
 * 3.12
 * 3.13
@@ -131,10 +130,10 @@ List all available environments:
 tox -av
 ```
 
-Run tests for a specific Python version (e.g., 3.10):
+Run tests for a specific Python version (e.g., 3.13):
 
 ```bash
-tox -e 3.10
+tox -e 3.13
 ```
 
 Check typing with mypy:

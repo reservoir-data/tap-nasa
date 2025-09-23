@@ -5,6 +5,7 @@ from __future__ import annotations
 import datetime
 import typing as t
 
+from requests import Response
 from singer_sdk.testing import SuiteConfig, get_tap_test_class
 
 from tap_nasa.client import DateRange, DateRangePaginator
@@ -12,7 +13,7 @@ from tap_nasa.tap import TapNASA
 
 
 def today() -> datetime.date:  # noqa: D103
-    return datetime.datetime.now(datetime.timezone.utc).date()
+    return datetime.datetime.now(datetime.UTC).date()
 
 
 SAMPLE_CONFIG: dict[str, t.Any] = {
@@ -35,7 +36,7 @@ def test_date_range_pagination() -> None:
     interval = datetime.timedelta(days=10)
     max_date = datetime.date(2021, 1, 25)
 
-    response = object()
+    response = Response()
 
     paginator = DateRangePaginator(
         start_value=DateRange(
