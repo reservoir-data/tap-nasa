@@ -33,7 +33,7 @@ dynamic = [
   "version",
 ]
 dependencies = [
-  "singer-sdk~=0.52.5",
+  "singer-sdk~=0.53.2",
   "typing-extensions>=4.15; python_full_version<'3.12'",
 ]
 urls.Documentation = "https://github.com/reservoir-data/tap-nasa#readme"
