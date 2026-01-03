@@ -2,7 +2,7 @@
 build-backend = "hatchling.build"
 requires = [
   "hatch-vcs==0.5",
-  "hatchling==1.28.0",
+  "hatchling==1.28",
 ]
 
 [project]
@@ -21,10 +21,9 @@ maintainers = [
 authors = [
   { name = "Edgar Ramírez-Mondragón", email = "edgarrmondragon@hey.com" },
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 classifiers = [
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
@@ -34,7 +33,6 @@ dynamic = [
 ]
 dependencies = [
   "singer-sdk~=0.53.2",
-  "typing-extensions>=4.15; python_full_version<'3.12'",
 ]
 urls.Documentation = "https://github.com/reservoir-data/tap-nasa#readme"
 urls.Homepage = "https://github.com/reservoir-data/tap-nasa"
@@ -97,8 +95,18 @@ types-requests = "requests"
 [tool.pyproject-fmt]
 max_supported_python = "3.14"
 
-[tool.pytest.ini_options]
-addopts = "-vvv"
+[tool.pytest]
+addopts = [
+  "-vvv",
+  "-ra",
+  "--strict-config",
+  "--strict-markers",
+]
+filterwarnings = [ "error" ]
+log_level = "INFO"
+minversion = "9"
+testpaths = [ "tests" ]
+xfail_strict = true
 
 [tool.tox]
 min_version = "4.22"
@@ -108,7 +116,6 @@ env_list = [
   "3.14",
   "3.13",
   "3.12",
-  "3.11",
 ]
 
 [tool.tox.env_run_base]
@@ -132,6 +139,8 @@ commands = [
 ]
 
 [tool.mypy]
+enable_error_code = [ "ignore-without-code", "redundant-expr", "truthy-bool" ]
+strict = true
 warn_redundant_casts = true
 warn_return_any = true
 warn_no_return = true
