@@ -3,19 +3,14 @@
 from __future__ import annotations
 
 import dataclasses
-import sys
 import typing as t
 from datetime import UTC, date, datetime, timedelta
+from typing import override
 
 from singer_sdk import RESTStream
 from singer_sdk import typing as th
 from singer_sdk.authenticators import APIKeyAuthenticator
 from singer_sdk.pagination import BaseAPIPaginator
-
-if sys.version_info >= (3, 12):
-    from typing import override
-else:
-    from typing_extensions import override
 
 if t.TYPE_CHECKING:
     from requests import Response
