@@ -38,7 +38,7 @@ env:
   # renovate: datasource=pypi depName=tox-uv
   TOX_UV_VERSION: 1.33.0
   # renovate: datasource=pypi depName=uv
-  UV_VERSION: 0.10.7
+  UV_VERSION: 0.11.2
 
 jobs:
   test:
