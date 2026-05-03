@@ -2,7 +2,7 @@
 build-backend = "hatchling.build"
 requires = [
   "hatch-vcs==0.5",
-  "hatchling==1.29.0",
+  "hatchling==1.29",
 ]
 
 [project]
@@ -13,13 +13,6 @@ keywords = [
   "ELT",
   "NASA",
   "singer.io",
-]
-license.file = "LICENSE"
-maintainers = [
-  { name = "Edgar Ramírez-Mondragón", email = "edgarrm358@gmail.com" },
-]
-authors = [
-  { name = "Edgar Ramírez-Mondragón", email = "edgarrm358@gmail.com" },
 ]
 requires-python = ">=3.12"
 classifiers = [
@@ -34,10 +27,20 @@ dynamic = [
 dependencies = [
   "singer-sdk~=0.54.0a4",
 ]
-urls.Documentation = "https://github.com/reservoir-data/tap-nasa#readme"
-urls.Homepage = "https://github.com/reservoir-data/tap-nasa"
-urls.Repository = "https://github.com/reservoir-data/tap-nasa"
-scripts."tap-nasa" = "tap_nasa.tap:TapNASA.cli"
+[[project.authors]]
+name = "Edgar Ramírez-Mondragón"
+email = "edgarrmondragon@hey.com"
+[project.license]
+file = "LICENSE"
+[[project.maintainers]]
+name = "Edgar Ramírez-Mondragón"
+email = "edgarrmondragon@hey.com"
+[project.scripts]
+tap-nasa = "tap_nasa.tap:TapNASA.cli"
+[project.urls]
+Documentation = "https://github.com/reservoir-data/tap-nasa#readme"
+Homepage = "https://github.com/reservoir-data/tap-nasa"
+Repository = "https://github.com/reservoir-data/tap-nasa"
 
 [dependency-groups]
 dev = [
@@ -60,32 +63,33 @@ source = "vcs"
 
 [tool.ruff]
 line-length = 88
-lint.select = [
+[tool.ruff.lint]
+select = [
   "ALL",
 ]
-lint.ignore = [
+ignore = [
   "COM812", # missing-trailing-comma
   "DJ",     # flake8-django
   "FIX002", # line-contains-todo
   "ISC001", # single-line-implicit-string-concatenation
   "PD",     # pandas-vet
 ]
-lint.per-file-ignores."tests/*" = [
+per-file-ignores."tests/*" = [
   "ANN201", # missing-return-type-public-function
   "S101",   # assert
   "SLF001", # private-member-access
 ]
-lint.unfixable = [
+unfixable = [
   "ERA001", # commented-out-code
 ]
-lint.flake8-annotations.allow-star-arg-any = true
-lint.isort.known-first-party = [
+flake8-annotations.allow-star-arg-any = true
+isort.known-first-party = [
   "tap_nasa",
 ]
-lint.isort.required-imports = [
+isort.required-imports = [
   "from __future__ import annotations",
 ]
-lint.pydocstyle.convention = "google"
+pydocstyle.convention = "google"
 
 [tool.deptry.package_module_name_map]
 mypy = "mypy"
@@ -93,50 +97,7 @@ ty = "ty"
 types-requests = "requests"
 
 [tool.pyproject-fmt]
-max_supported_python = "3.14"
-
-[tool.pytest]
-addopts = [
-  "-vvv",
-  "-ra",
-  "--strict-config",
-  "--strict-markers",
-]
-filterwarnings = [ "error" ]
-log_level = "INFO"
-minversion = "9"
-testpaths = [ "tests" ]
-xfail_strict = true
-
-[tool.tox]
-min_version = "4.22"
-env_list = [
-  "dependencies",
-  "typing",
-  "3.14",
-  "3.13",
-  "3.12",
-]
-
-[tool.tox.env_run_base]
-description = "integration tests"
-runner = "uv-venv-lock-runner"
-pass_env = [ "TAP_NASA_*" ]
-dependency_groups = [ "testing" ]
-commands = [ [ "pytest", { replace = "posargs", default = [ "tests" ], extend = true } ] ]
-
-[tool.tox.env.dependencies]
-description = "check imports for transitive dependencies"
-dependency_groups = [ "testing" ]
-commands = [ [ "deptry", "." ] ]
-
-[tool.tox.env.typing]
-description = "static type checks"
-dependency_groups = [ "testing", "typing" ]
-commands = [
-  [ "mypy", "--strict", { replace = "posargs", default = [ "tap_nasa", "tests" ], extend = true } ],
-  [ "ty", "check", { replace = "posargs", default = [ "tap_nasa", "tests" ], extend = true } ],
-]
+table_format = "long"
 
 [tool.mypy]
 enable_error_code = [ "ignore-without-code", "redundant-expr", "truthy-bool" ]
@@ -147,3 +108,43 @@ warn_no_return = true
 warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
+
+[tool.pytest]
+addopts = [
+  "-v",
+  "-ra",
+]
+filterwarnings = [ "error" ]
+log_level = "INFO"
+minversion = "9"
+strict = true
+testpaths = [ "tests" ]
+
+[tool.tox]
+requires = [ "tox>=4.53", "tox-uv" ]
+env_list = [
+  "dependencies",
+  "typing",
+  "test",
+]
+[tool.tox.env.dependencies]
+description = "check imports for transitive dependencies"
+dependency_groups = [ "testing" ]
+commands = [ [ "deptry", "." ] ]
+[tool.tox.env.test]
+description = "run tests on Python {py_dot_ver}"
+base_python_file = [ ".python-version" ]
+[tool.tox.env.typing]
+description = "static type checks"
+dependency_groups = [ "testing", "typing" ]
+commands = [
+  [ "mypy", "--strict", { replace = "posargs", default = [ "tap_nasa", "tests" ], extend = true } ],
+  [ "ty", "check", { replace = "posargs", default = [ "tap_nasa", "tests" ], extend = true } ],
+]
+
+[tool.tox.env_run_base]
+description = "run tests on Python {py_dot_ver}"
+runner = "uv-venv-lock-runner"
+pass_env = [ "TAP_NASA_*" ]
+dependency_groups = [ "testing" ]
+commands = [ [ "pytest", { replace = "posargs", default = [ "tests" ], extend = true } ] ]
