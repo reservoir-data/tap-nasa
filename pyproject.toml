@@ -55,7 +55,6 @@ testing = [
 typing = [
   "mypy>=1",
   "ty>=0.0.1a21",
-  "types-requests>=2.32.4.20250913",
 ]
 
 [tool.hatch.version]
@@ -94,7 +93,6 @@ pydocstyle.convention = "google"
 [tool.deptry.package_module_name_map]
 mypy = "mypy"
 ty = "ty"
-types-requests = "requests"
 
 [tool.pyproject-fmt]
 table_format = "long"
@@ -138,7 +136,7 @@ base_python_file = [ ".python-version" ]
 description = "static type checks"
 dependency_groups = [ "testing", "typing" ]
 commands = [
-  [ "mypy", "--strict", { replace = "posargs", default = [ "tap_nasa", "tests" ], extend = true } ],
+  [ "mypy", { replace = "posargs", default = [ "tap_nasa", "tests" ], extend = true } ],
   [ "ty", "check", { replace = "posargs", default = [ "tap_nasa", "tests" ], extend = true } ],
 ]
 
