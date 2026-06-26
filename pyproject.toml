@@ -98,14 +98,14 @@ ty = "ty"
 table_format = "long"
 
 [tool.mypy]
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_return_any = true
+warn_unreachable = true
 enable_error_code = [ "ignore-without-code", "redundant-expr", "truthy-bool" ]
 strict = true
-warn_redundant_casts = true
-warn_return_any = true
-warn_no_return = true
-warn_unreachable = true
 warn_unused_configs = true
-warn_unused_ignores = true
 
 [tool.pytest]
 addopts = [
@@ -122,8 +122,8 @@ testpaths = [ "tests" ]
 requires = [ "tox>=4.53", "tox-uv" ]
 env_list = [
   "dependencies",
-  "typing",
   "test",
+  "typing",
 ]
 [tool.tox.env.dependencies]
 description = "check imports for transitive dependencies"
@@ -141,8 +141,8 @@ commands = [
 ]
 
 [tool.tox.env_run_base]
-description = "run tests on Python {py_dot_ver}"
 runner = "uv-venv-lock-runner"
-pass_env = [ "TAP_NASA_*" ]
+description = "run tests on Python {py_dot_ver}"
 dependency_groups = [ "testing" ]
+pass_env = [ "TAP_NASA_*" ]
 commands = [ [ "pytest", { replace = "posargs", default = [ "tests" ], extend = true } ] ]
