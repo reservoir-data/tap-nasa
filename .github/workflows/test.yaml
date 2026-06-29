@@ -9,7 +9,7 @@ on:
       - pyproject.toml
       - tox.ini
       - uv.lock
-      - .github/workflows/test.yml
+      - .github/workflows/test.yaml
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
@@ -18,7 +18,7 @@ on:
       - pyproject.toml
       - tox.ini
       - uv.lock
-      - .github/workflows/test.yml
+      - .github/workflows/test.yaml
   workflow_dispatch:
   schedule:
   # Run weekly on Monday at 12:00 PM UTC
@@ -34,11 +34,11 @@ concurrency:
 env:
   FORCE_COLOR: "1"
   # renovate: datasource=pypi depName=tox
-  TOX_VERSION: 4.53.0
+  TOX_VERSION: 4.55.0
   # renovate: datasource=pypi depName=tox-uv
-  TOX_UV_VERSION: 1.35.1
+  TOX_UV_VERSION: 1.35.2
   # renovate: datasource=pypi depName=uv
-  UV_VERSION: 0.11.7
+  UV_VERSION: 0.11.25
 
 jobs:
   build-package:
@@ -47,11 +47,11 @@ jobs:
     outputs:
       supported-python-versions: ${{ steps.baipp.outputs.supported_python_classifiers_json_array }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: hynek/build-and-inspect-python-package@efb823f52190ad02594531168b7a2d5790e66516 # v2.14.0
+      - uses: hynek/build-and-inspect-python-package@d44ca7d91762de7a7d5436ddae667c6da6d1c3df # v2.18.0
         id: baipp
 
   test:
@@ -64,10 +64,10 @@ jobs:
         python-version: ${{ fromJson(needs.build-package.outputs.supported-python-versions) }}
 
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       with:
         persist-credentials: false
-    - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+    - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
       with:
         python-version: ${{ matrix.python-version }}
         version: ${{ env.UV_VERSION }}
@@ -77,21 +77,21 @@ jobs:
         MATRIX_PYTHON_VERSION: ${{ matrix.python-version }}
       run: >
         uvx
-        --with tox-uv==${TOX_UV_VERSION}
-        --with tox==${TOX_VERSION}
-        tox -e ${MATRIX_PYTHON_VERSION}
+        --with tox-uv=="${TOX_UV_VERSION}"
+        --with tox=="${TOX_VERSION}"
+        tox -e "${MATRIX_PYTHON_VERSION}"
 
   lint:
     name: Lint
     runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       with:
         persist-credentials: false
-    - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+    - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
       with:
         version: ${{ env.UV_VERSION }}
-    - run: uv tool install --with tox-uv==${TOX_UV_VERSION} --from tox==${TOX_VERSION} tox
+    - run: uv tool install --with tox-uv=="${TOX_UV_VERSION}" --from tox=="${TOX_VERSION}" tox
     - name: Static type checking
       run: tox -e typing
     - name: Unused, missing and transitive dependencies

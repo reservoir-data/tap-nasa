@@ -25,7 +25,7 @@ dynamic = [
   "version",
 ]
 dependencies = [
-  "singer-sdk~=0.54.0a4",
+  "singer-sdk~=0.54.5",
 ]
 [[project.authors]]
 name = "Edgar Ramírez-Mondragón"
@@ -44,17 +44,17 @@ Repository = "https://github.com/reservoir-data/tap-nasa"
 
 [dependency-groups]
 dev = [
+  "deptry>=0.25",
   { include-group = "testing" },
   { include-group = "typing" },
 ]
 testing = [
-  "deptry>=0.12",
-  "pytest>=8",
+  "pytest>=9",
   "singer-sdk[testing]",
 ]
 typing = [
-  "mypy>=1",
-  "ty>=0.0.1a21",
+  "mypy>=2.1",
+  "ty>=0.0.50",
 ]
 
 [tool.hatch.version]
@@ -90,10 +90,6 @@ isort.required-imports = [
 ]
 pydocstyle.convention = "google"
 
-[tool.deptry.package_module_name_map]
-mypy = "mypy"
-ty = "ty"
-
 [tool.pyproject-fmt]
 table_format = "long"
 
@@ -119,7 +115,7 @@ strict = true
 testpaths = [ "tests" ]
 
 [tool.tox]
-requires = [ "tox>=4.53", "tox-uv" ]
+requires = [ "tox>=4.55", "tox-uv>=1.35" ]
 env_list = [
   "dependencies",
   "test",
@@ -127,7 +123,7 @@ env_list = [
 ]
 [tool.tox.env.dependencies]
 description = "check imports for transitive dependencies"
-dependency_groups = [ "testing" ]
+dependency_groups = [ "dev" ]
 commands = [ [ "deptry", "." ] ]
 [tool.tox.env.test]
 description = "run tests on Python {py_dot_ver}"
