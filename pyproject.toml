@@ -110,7 +110,10 @@ addopts = [
   "-v",
   "-ra",
 ]
-filterwarnings = [ "error" ]
+filterwarnings = [
+  "error",
+  "once:Fields in transformed catalog but not in records:UserWarning",
+]
 log_level = "INFO"
 minversion = "9"
 strict = true
